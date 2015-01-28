@@ -1,0 +1,22 @@
+{
+  "name": "Chatbox",
+  "version": "0.1.0",
+  "description": "My attempt at making a chatbox",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Hello!\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "C:\\Users\\PeterG\\WebstormProjects\\Chatbox"
+  },
+  "keywords": [
+    "Node",
+    "Chatbox"
+  ],
+  "author": "Peter Geiss",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.11.1"
+  }
+}

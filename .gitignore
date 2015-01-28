@@ -52,3 +52,4 @@ button.html
 js/buttoncounter.js
 .idea/misc.xml
 .idea/jsLibraryMappings.xml
+.node_modules/
