@@ -4,11 +4,11 @@
   "description": "My attempt at making a chatbox",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Hello!\" && exit 1"
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
-    "url": "C:\\Users\\PeterG\\WebstormProjects\\Chatbox"
+    "url": "https://github.com/pgeiss/Chatbox"
   },
   "keywords": [
     "Node",
