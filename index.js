@@ -5,10 +5,12 @@ app.set('port', (process.env.PORT || 5000));
 
 app.get('/', function (req, res) {
 	res.sendFile(__dirname + req.url);
+	console.log(__dirname, " ", req.url);
 });
 
 app.get('/css', function (req, res) {
 	res.sendFile(__dirname + req.url);
+	console.log(__dirname, " ", req.url);
 });
 
 app.listen(app.get('port'), function () {
