@@ -4,7 +4,7 @@ var app = express();
 app.set('port', (process.env.PORT || 5000));
 
 app.get('/', function (req, res) {
-	res.sendFile(__dirname + req.url);
+	res.send(__dirname + '/css');
 });
 
 app.get('/css/', function (req, res) {
