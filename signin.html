@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Sign In</title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/navbar.css" rel="stylesheet">
+    <link href="css/buttons.css" rel="stylesheet">
 
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
@@ -13,30 +15,48 @@
     <![endif]-->
 </head>
 <body>
-<div class="well well-lg">
-    <form class="form-horizontal">
-        <div class="form-group">
-            <label for="inputUsername" class="col-sm-2 control-label">Username</label>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" id="inputUsername" placeholder="Username" style="width: 10%;">
-            </div>
-            <label for="inputPassword" class="col-sm-2 control-label">Password</label>
-            <div class="col-sm-10">
-                <input type="password" class="form-control" id="inputPassword" placeholder="********" style="width: 10%;">
-            </div>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="index.html">Chatbox</a>
         </div>
-        <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn btn-success" onclick="requestLogIn()">Sign In</button>
-            </div>
+        <div id="navbar" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="index.html">Home</a></li>
+                <li class="active"><a href="signin.html">Log In</a></li>
+                <li><a href="register.html">Register</a></li>
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div>
+</nav>
+<form class="form-vertical">
+    <div class="form-group">
+        <label for="inputUsername" class="col-sm-2 control-label"></label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="inputUsername" placeholder="Username" style="width: 10%;">
         </div>
-    </form>
-    <div class="col-sm-offset-2 col-sm-10">
-        <p><b><i>-- or, instead... --</i></b></p>
+        <label for="inputPassword" class="col-sm-2 control-label"></label>
+        <div class="col-sm-10">
+            <input type="password" class="form-control" id="inputPassword" placeholder="********" style="width: 10%;">
+        </div>
     </div>
-    <div class="col-sm-offset-2 col-sm-10">
-        <a href="register.html"><button type="button" class="btn btn-info">Register a new account here</button></a>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10 submit-button">
+            <button type="submit" class="btn btn-success" onclick="requestLogIn()">Sign In</button>
+        </div>
     </div>
+</form>
+<div class="col-sm-offset-2 col-sm-10">
+    <p><b><i>-- or, instead... --</i></b></p>
+</div>
+<div class="col-sm-offset-2 col-sm-10">
+    <a href="register.html"><button type="button" class="btn btn-info">Register a new account here</button></a>
 </div>
 
 <script src="js/signInPageJS.js"></script>
