@@ -6,6 +6,9 @@
   "scripts": {
     "start": "node index.js"
   },
+  "dependencies": {
+    "mongodb": "~2.0"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/pgeiss/Chatbox"
