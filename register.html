@@ -35,7 +35,7 @@
         </div><!--/.nav-collapse -->
     </div>
 </nav>
-<form class="form-horizontal">
+<form class="form-horizontal" id="user-pw-form">
     <div class="form-group">
         <label for="inputDesiredUsername" class="col-sm-2 control-label">Desired Username</label>
         <div class="col-sm-10">
@@ -48,11 +48,14 @@
     </div>
     <div class="form-group">
         <div class="col-sm-offset-2 col-sm-10">
-            <button type="submit" class="btn btn-success" onclick="requestNewAccount()">Register</button>
+            <button type="submit" class="btn btn-success" id="form-submit">Register</button>
         </div>
     </div>
 </form>
 
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script src="http://malsup.github.com/jquery.form.js"></script>
 <script src="js/registerPageJS.js"></script>
 
 </body>
