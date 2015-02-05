@@ -17,7 +17,7 @@ MongoClient.connect(host, function (err, db) {
     });
 });
 
-exports.check() {
+exports.check = function () {
 	var toReturn = '';
 	MongoClient.connect(host, function (err, db) {
 		toReturn = db.collectionNames('accounts');
