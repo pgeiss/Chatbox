@@ -35,20 +35,20 @@
         </div><!--/.nav-collapse -->
     </div>
 </nav>
-<form class="form-vertical">
+<form class="form-vertical" id="user-pw-form" method="post">
     <div class="form-group">
         <label for="inputUsername" class="col-sm-2 control-label"></label>
         <div class="col-sm-10">
-            <input type="text" class="form-control" id="inputUsername" placeholder="Username" style="width: 10%;">
+            <input type="text" class="form-control" id="inputUsername" name="username" placeholder="Username" style="width: 10%;">
         </div>
         <label for="inputPassword" class="col-sm-2 control-label"></label>
         <div class="col-sm-10">
-            <input type="password" class="form-control" id="inputPassword" placeholder="********" style="width: 10%;">
+            <input type="password" class="form-control" id="inputPassword" name="password" placeholder="********" style="width: 10%;">
         </div>
     </div>
     <div class="form-group">
         <div class="col-sm-offset-2 col-sm-10 submit-button">
-            <button type="submit" class="btn btn-success" onclick="requestLogIn()">Sign In</button>
+            <button type="submit" class="btn btn-success">Sign In</button>
         </div>
     </div>
 </form>
