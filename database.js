@@ -1,6 +1,6 @@
 var MongoDB = require('mongodb');
-var Client = require('mongodb').MongoClient;
-var Server = require('mongodb').Server;
+var Client = MongoDB.MongoClient;
+var Server = MongoDB.Server;
 
 var host = process.env.MONGOLAB_URI;
 
