@@ -5,6 +5,8 @@ var Server = require('mongodb').Server;
 var host = process.env.MONGOLAB_URI;
 
 MongoClient.connect(host, function (err, db) {
+	if (err)
+		console.log(err);
 	test.equal(null, err);
 	test.ok(db != null);
 
@@ -20,6 +22,9 @@ MongoClient.connect(host, function (err, db) {
 exports.check = function () {
 	var toReturn = '';
 	MongoClient.connect(host, function (err, db) {
+		if (err)
+			console.log(err);
+
 		toReturn = db.collectionNames('accounts');
 		db.close();
 	});
