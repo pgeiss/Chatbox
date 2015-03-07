@@ -54,3 +54,5 @@ js/buttoncounter.js
 .idea/jsLibraryMappings.xml
 node_modules/
 .idea/libraries/Chatbox_node_modules.xml
+key/chatbox.ppk
+key/chatbox_pub
