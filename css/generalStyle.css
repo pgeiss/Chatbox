@@ -1,0 +1,13 @@
+body {
+    background-color: #333333;
+    color: #fff;
+    padding-top: 70px;
+}
+
+a, a:focus, a:hover {
+    color: #fff;
+}
+
+.jumbotron {
+    background-color: #333333;
+}
