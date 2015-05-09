@@ -5,11 +5,11 @@ var nodeServer = require('http').Server(app);
 //var database = require('./database.js');
 var io = require('socket.io').listen(nodeServer);
 var socketPort = 3000;
-app.set('port', 80);
+app.set('port', process.env.PORT || 5000);
 app.use(express.static(__dirname));
 
 app.get('/', function (req, res) {
-	res.sendFile(req.url);
+	res.sendFile(__dirname + req.url);
 });
 
 io.on('connection', function (socket) {
@@ -23,9 +23,9 @@ io.on('connection', function (socket) {
 	});
 })
 
-app.post('/', function (req, res) {
+/*app.post('/', function (req, res) {
 	console.log("Post request received");
-});
+});*/
 
 app.listen(app.get('port'), function () {
   console.log("Node app is running on port:" + app.get('port'));

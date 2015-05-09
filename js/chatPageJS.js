@@ -1,4 +1,4 @@
-var socket = io.connect('http://localhost:3000');
+var socket = io.connect('//app.petergeiss.me:3000');
 
 socket.on('incoming message', function (msg) {
     addNewMessage(msg, false);
