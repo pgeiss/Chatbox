@@ -5,6 +5,7 @@ var nodeServer = require('http').Server(app);
 //var database = require('./database.js');
 var io = require('socket.io').listen(nodeServer);
 var socketPort = 3000;
+app.set('socketPort', 3000);
 app.set('port', process.env.PORT || 5000);
 app.use(express.static(__dirname));
 
@@ -31,6 +32,6 @@ app.listen(app.get('port'), function () {
   console.log("Node app is running on port:" + app.get('port'));
 });
 
-nodeServer.listen(socketPort, function () {
-	console.log("Socket.io server is listening to port " + socketPort);
+nodeServer.listen(app.get('socketPort'), function () {
+	console.log("Socket.io server is listening to port " + app.get('socketPort');
 });
