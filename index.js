@@ -5,7 +5,7 @@ var nodeServer = require('http').Server(app);
 //var database = require('./database.js');
 var io = require('socket.io').listen(nodeServer);
 var socketPort = 3000;
-app.set('socketPort', 80);
+app.set('socketPort', 39000);
 app.set('port', process.env.PORT || 5000);
 app.use(express.static(__dirname));
 
