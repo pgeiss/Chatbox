@@ -15,7 +15,8 @@ app.get('/', function (req, res) {
 io.on('connection', function (socket) {
 	console.log("Someone connected.");
 	socket.on('msg', function (msg) {
-		console.log('Entered: ' + msg);
+		console.log('Incoming message: ' + msg);
+		socket.broadcast.emit('incoming message', msg);
 	});
 	socket.on('disconnect', function () {
 		console.log('Someone disconnected.');
