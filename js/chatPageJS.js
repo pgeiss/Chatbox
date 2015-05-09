@@ -1,4 +1,4 @@
-var socket = io.connect('//test.petergeiss.me:3000');
+var socket = io.connect('//test.petergeiss.me:80');
 
 socket.on('incoming message', function (msg) {
     addNewMessage(msg, false);
