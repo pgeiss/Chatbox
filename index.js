@@ -33,5 +33,5 @@ app.listen(app.get('port'), function () {
 });
 
 nodeServer.listen(app.get('socketPort'), function () {
-	console.log("Socket.io server is listening to port " + app.get('socketPort');
+	console.log("Socket.io server is listening to port " + app.get('socketPort'));
 });
