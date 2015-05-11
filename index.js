@@ -23,9 +23,10 @@ io.on('connection', function (socket) {
 	});
 })
 
-/*app.post('/', function (req, res) {
+app.post('/signin', function (req, res) {
 	console.log("Post request received");
-});*/
+	console.log("" + req[0]); //TODO
+});
 
 app.listen(app.get('port'), function () {
   console.log("Node app is running on port:" + app.get('port'));
