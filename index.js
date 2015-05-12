@@ -38,12 +38,16 @@ io.on('connection', function (socket) {
 
 app.post('/signin', function (req, res) {
 	console.log("Post request received");
+<<<<<<< HEAD
 	console.log("UN: " + req.username + " PW: " + req.password);
 });
 
 app.post('/register', function (req, res) {
 	console.log("Post request received");
 	console.log("UN: " + req.username + " PW: " + req.password);
+=======
+	console.log("" + req[0]); //TODO
+>>>>>>> origin/master
 });
 
 app.listen(app.get('port'), function () {
