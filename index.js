@@ -37,12 +37,12 @@ io.on('connection', function (socket) {
 })
 
 app.post('/signin', function (req, res) {
-	console.log("Post request received");
+	console.log("Login Post request received");
 	console.log("UN: " + req.username + " PW: " + req.password);
 });
 
 app.post('/register', function (req, res) {
-	console.log("Post request received");
+	console.log("Register Post request received");
 	console.log("UN: " + req.username + " PW: " + req.password);
 	console.log("" + req[0]); //TODO
 });
@@ -52,5 +52,6 @@ app.listen(app.get('port'), function () {
 });
 
 nodeServer.listen(app.get('socketPort'), function () {
-	console.log("Socket.io server is listening to port " + app.get('socketPort'));
+	console.log("Socket.io server is listening to port " + 
+		app.get('socketPort'));
 });
