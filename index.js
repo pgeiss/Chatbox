@@ -16,7 +16,7 @@ app.get('/', function (req, res) {
 
 io.on('connection', function (socket) {
 	console.log('A user connected to ID ' + socket.id);
-	clients.push(socket);
+	//clients.push(socket.id);
 
 	socket.on('msg', function (msg) {
 		console.log('Incoming message: ' + msg);
@@ -29,11 +29,12 @@ io.on('connection', function (socket) {
 	})
 
 	socket.on('disconnect', function () {
-		var toRemove = clients.indexof(socket);
+		/*var toRemove = clients.indexof(socket);
 		if (index != -1) {
 			clients.splice(index, 1);
 			console.log('A user disconnected from ID ' + socket.id);
-		}
+		}*/
+		console.log('A user disconnected from ID ' + socket.id);
 	});
 })
 
