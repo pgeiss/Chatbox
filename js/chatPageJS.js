@@ -15,12 +15,27 @@ $('form').submit(function (e) {
     return false;
 });
 
+
+
 function addNewMessage(msg, isUser) {
     var liClass = '';
-    if (isUser)
+    var startCol = '\<div class="row"\>';
+    var endCol = '\</div\>';
+    if (isUser) {
         liClass = 'user-message';
-    else liClass = 'other-message';
+        startCol = startCol + '\<div class="col-xs-7"\>\</div\>';
+        endCol = '\<div class="col-xs-1"\>\</div\>' + endCol;
+        
+    }
+    else { 
+        liClass = 'other-message';
+        startCol = startCol + '\<div class="col-xs-1"\>\</div\>';
+        encCol = '\<div class="col-xs-7"\>\</div\>' + endCol;
+    }
+
     $(document).ready(function () {
-        $(liSelector).append('\<li class=\"list-group-item ' + liClass + '\"\>' + msg + '\</li\>');
-    });
+            $(liSelector).append(startCol + 
+                '\<div class="col-xs-4"\>\<li class=\"list-group-item ' + 
+                liClass + '\"\>' + msg + '\</li\>\</div\>' + endCol);
+        });  
 }

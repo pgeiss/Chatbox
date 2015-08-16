@@ -7,6 +7,7 @@ var io = require('socket.io').listen(nodeServer);
 var clients = [];
 app.set('socketPort', 39000);
 app.set('port', 80);
+//app.set('port', 8000); DEBUG USE ONLY
 app.use(express.static(__dirname));
 
 app.get('/', function (req, res) {
