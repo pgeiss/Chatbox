@@ -57,3 +57,5 @@ private/
 .idea/libraries/Chatbox_node_modules.xml
 key/chatbox.ppk
 key/chatbox_pub
+
+databaseBackend.js

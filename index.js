@@ -1,13 +1,12 @@
 var express = require('express');
 var app = express();
 var nodeServer = require('http').Server(app);
-//var mongo = require('mongodb');
-//var database = require('./database.js');
+var Database = require('./database.js');
 var io = require('socket.io').listen(nodeServer);
 var clients = [];
 app.set('socketPort', 39000);
 app.set('port', 80);
-//app.set('port', 8000); DEBUG USE ONLY
+//app.set('port', 8000); //DEBUG USE ONLY
 app.use(express.static(__dirname));
 
 app.get('/', function (req, res) {
@@ -44,9 +43,16 @@ app.post('/signin', function (req, res) {
 });
 
 app.post('/register', function (req, res) {
-	console.log("Register Post request received");
-	console.log("UN: " + req.username + " PW: " + req.password);
-	console.log("" + req[0]); //TODO
+	console.log("A user attempted to register...");
+	Database.registerUser(req.username, req.password, function (success) {
+		if (success) {
+			console.log('successfully');
+			res.sendFile(__dirname + index.html);
+		} else if (success === false) {
+			console.log('unsuccessfully');
+			res.sendFile(__dirname + register.html + '?unsuccessful=true');
+		}
+	});
 });
 
 app.listen(app.get('port'), function () {

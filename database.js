@@ -1,32 +1,32 @@
 var MongoDB = require('mongodb');
-var Client = MongoDB.MongoClient;
-var Server = MongoDB.Server;
+var MongoClient = require('mongodb').MongoClient;
+var Backend = require('./databaseBackend.js');
 
-var host = process.env.MONGOLAB_URI; //TODO
+var host = Backend.uri;
 
-MongoClient.connect(host, function (err, db) {
-	if (err)
-		console.log(err);
-	test.equal(null, err);
-	test.ok(db != null);
 
-	db.collection("replicaset_mongo_client_collection").update({a:1}, {b:1}, {upsert:true}, 
-		function(err, result) {
-		    test.equal(null, err);
-		    test.equal(1, result);
-
-		    db.close();
-		    test.done();
-	    });
+/* Some ideas for how the DB connection might work. I left the actual
+	functions out for security purposes. */
+/* MongoClient.connect(host, function (err, db) {
+	mongoFind(db, 'chatbox', {"a":"b"}, function (data) {
+		db.close();
+	})
 });
 
-exports.check = function () {
-	var toReturn = '';
-	MongoClient.connect(host, function (err, db) {
-		if (err)
-			console.log(err);
+function mongoFind(db, collectionName, data, cb) {
+    var collection = db.collection(collectionName);
+    var stream = collection.find(data).stream();
+	stream.on("data", function(item) {console.log(item.a)});
+	stream.on("end", function() {cb();});
+} */
 
-		toReturn = db.collectionNames('accounts');
-		db.close();
+exports.register = function (user, pw, cb) {
+	MongoClient.connect(host, function (err, db) {
+		if (err) {
+			console.log(err);
+		}
+		else {
+			Backend.registerUser(user, pw, db, cb);
+		}
 	});
 }
