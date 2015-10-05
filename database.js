@@ -6,8 +6,9 @@ var host = Backend.uri;
 
 
 /* Some ideas for how the DB connection might work. I left the actual
-	functions out for security purposes. */
-/* MongoClient.connect(host, function (err, db) {
+	functions out for security purposes.
+	
+MongoClient.connect(host, function (err, db) {
 	mongoFind(db, 'chatbox', {"a":"b"}, function (data) {
 		db.close();
 	})
@@ -20,13 +21,23 @@ function mongoFind(db, collectionName, data, cb) {
 	stream.on("end", function() {cb();});
 } */
 
-exports.register = function (user, pw, cb) {
+exports.login = function (User, cb) {
+	MongoClient.connect(host, function (err, db) {
+		if (err) {
+			console.log(err);
+		} else {
+			Backend.loginUser(User, db, cb);
+		}
+	});
+}
+
+exports.register = function (User, cb) {
 	MongoClient.connect(host, function (err, db) {
 		if (err) {
 			console.log(err);
 		}
 		else {
-			Backend.registerUser(user, pw, db, cb);
+			Backend.registerUser(User, db, cb);
 		}
 	});
 }

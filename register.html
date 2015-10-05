@@ -35,15 +35,25 @@
         </div><!--/.nav-collapse -->
     </div>
 </nav>
-<form class="form-horizontal" id="user-pw-form" method="post">
+<div class="alert alert-info" role="alert">Username should contain 4-16 regular characters (a-z, 0-9, _) and must be unique.<br>
+Password can contain anything but must be at least 6 characters long.<br>
+Display Name is your reserved display name. You <i>can</i> change your display name in the chat and it won't change your reserved name.</div>
+<div class="insert-extra-info-here"></div>
+<form class="form-horizontal" id="user-pw-form" method="post" 
+action="/register">
     <div class="form-group">
-        <label for="inputDesiredUsername" class="col-sm-2 control-label">Desired Username</label>
+        <label for="inputDesiredUsername" class="col-sm-2 control-label">Username</label>
         <div class="col-sm-10">
-            <input type="text" class="form-control" name="username" id="inputDesiredUsername" placeholder="Username" style="width: 10%;">
+            <input type="text" class="form-control" name="username" id="inputDesiredUsername" placeholder="Username" style="width: 30%;">
         </div>
         <label for="inputDesiredPassword" class="col-sm-2 control-label">Password</label>
         <div class="col-sm-10">
-            <input type="password" class="form-control" name="password" id="inputDesiredPassword" placeholder="********" style="width: 10%;">
+            <input type="password" class="form-control" name="password" id="inputDesiredPassword" placeholder="********" style="width: 30%;">
+        </div>
+        <label for="displayName" class="col-sm-2 control-label">
+        Display Name</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" name="dispName" id="displayName" placeholder="Display Name" style="width: 30%;">
         </div>
     </div>
     <div class="form-group">

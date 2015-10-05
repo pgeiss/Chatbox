@@ -1,4 +1,5 @@
 var socket = io.connect('//app.petergeiss.me:39000');
+//var socket = io.connect('//localhost:39000'); // DEBUG USE ONLY
 
 socket.on('incoming message', function (msg) {
     addNewMessage(msg, false);
