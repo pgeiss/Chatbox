@@ -5,38 +5,50 @@ socket.on('incoming message', function (msg) {
     addNewMessage(msg, false);
 });
 
+function SentGlobalMessage(msg, sender) {
+    this.msg = msg;
+    this.sender = sender;
+}
+
 var inputSelector = '#msg';
 var liSelector = '.list-group';
 $('form').submit(function (e) {
-    var enteredMessage = $(inputSelector).val();
+    var enteredMessage = new SentGlobalMessage($(inputSelector).val(), '');
     e.preventDefault();
     socket.emit('msg', enteredMessage);
-    addNewMessage(enteredMessage, true);
+    addOwnMessage(enteredMessage);
     $(inputSelector).val('');
     return false;
 });
 
+function addOwnMessage(Msg) {
+    var toSend = Msg;
+    toSend.msgType = 'own';
+    addNewMessage(toSend);
+}
 
-
-function addNewMessage(msg, isUser) {
+function addNewMessage(Msg) {
     var liClass = '';
     var startCol = '\<div class="row"\>';
     var endCol = '\</div\>';
-    if (isUser) {
+    if (Msg.msgType === 'own') {
         liClass = 'user-message';
-        startCol = startCol + '\<div class="col-xs-7"\>\</div\>';
-        endCol = '\<div class="col-xs-1"\>\</div\>' + endCol;
+        startCol = startCol + '\<div class="col-xs-3 col-lg-7"\>\</div\>';
+        endCol = '\<div class="col-xs-1 col-lg-1"\>\</div\>' + endCol;
         
     }
-    else { 
+    else if (Msg.msgType === 'other') { 
         liClass = 'other-message';
-        startCol = startCol + '\<div class="col-xs-1"\>\</div\>';
-        encCol = '\<div class="col-xs-7"\>\</div\>' + endCol;
+        startCol = startCol + '\<div class="col-xs-1 col-lg-1"\>\</div\>';
+        endCol = '\<div class="col-xs-3 col-lg-7"\>\</div\>' + endCol;
+    } else {
+        throw 'Undefined message type received!';
     }
 
     $(document).ready(function () {
             $(liSelector).append(startCol + 
-                '\<div class="col-xs-4"\>\<li class=\"list-group-item ' + 
-                liClass + '\"\>' + msg + '\</li\>\</div\>' + endCol);
+                '\<div class="col-xs-8 col-lg-4"\>' + 
+                '\<li class=\"list-group-item ' + 
+                liClass + '\"\>' + Msg.msg + '\</li\>\</div\>' + endCol);
         });  
 }

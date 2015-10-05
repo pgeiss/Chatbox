@@ -20,13 +20,21 @@ app.get('/', function (req, res) {
 	res.sendFile(__dirname + req.url);
 });
 
+function GlobalMessage(msg, msgType, sender) {
+	this.msg = msg;
+	this.msgType = msgType;
+	this.sender = sender;
+}
+
 io.on('connection', function (socket) {
 	console.log('A user connected to ID ' + socket.id);
 	//clients.push(socket.id);
 
-	socket.on('msg', function (msg) {
-		console.log('Incoming message: ' + msg);
-		socket.broadcast.emit('incoming message', msg);
+	socket.on('msg', function (Msg) {
+		console.log('Incoming message: ' + Msg.msg);
+
+		socket.broadcast.emit('incoming message', new GlobalMessage(Msg.msg, 
+			'other', ''));
 	});
 
 	socket.on('private msg', function (pmsg) {
