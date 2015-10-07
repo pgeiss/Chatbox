@@ -12,7 +12,7 @@ var third =      	'<span class="caret"></span></a>' +
                   '</ul></li>';
 
 var second = '';
-var cookieArray = document.cookie.split(';');
+var cookieArray = document.cookie.split('; ');
 for (var i = 0; i < cookieArray.length; i++) {
 	if (cookieArray[i].indexOf('user=') === 0) {
 		second = cookieArray[i].substring('user='.length, 

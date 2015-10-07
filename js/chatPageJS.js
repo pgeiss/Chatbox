@@ -1,5 +1,14 @@
 var socket = io.connect('//app.petergeiss.me:39000');
 //var socket = io.connect('//localhost:39000'); // DEBUG USE ONLY
+var cookieArray = document.cookie.split('; ');
+var displayName = '';
+for (var i = 0; i < cookieArray.length; i++) {
+    if (cookieArray[i].indexOf('dispName=') === 0) {
+        displayName = cookieArray[i].substring('dispName='.length, 
+            cookieArray[i].length);
+        break;
+    }
+}
 
 socket.on('incoming message', function (msg) {
     addNewMessage(msg, false);
@@ -13,7 +22,8 @@ function SentGlobalMessage(msg, sender) {
 var inputSelector = '#msg';
 var liSelector = '.list-group';
 $('form').submit(function (e) {
-    var enteredMessage = new SentGlobalMessage($(inputSelector).val(), '');
+    var enteredMessage = new SentGlobalMessage($(inputSelector).val(), 
+        displayName);
     e.preventDefault();
     socket.emit('msg', enteredMessage);
     addOwnMessage(enteredMessage);
@@ -49,6 +59,8 @@ function addNewMessage(Msg) {
             $(liSelector).append(startCol + 
                 '\<div class="col-xs-8 col-lg-4"\>' + 
                 '\<li class=\"list-group-item ' + 
-                liClass + '\"\>' + Msg.msg + '\</li\>\</div\>' + endCol);
+                liClass + '\"\>' + '<span title="' + new Date() + '">' +
+                Msg.sender + ': ' +
+                Msg.msg + '\</span\>\</li\>\</div\>' + endCol);
         });  
 }

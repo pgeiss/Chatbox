@@ -34,7 +34,7 @@ io.on('connection', function (socket) {
 		console.log('Incoming message: ' + Msg.msg);
 
 		socket.broadcast.emit('incoming message', new GlobalMessage(Msg.msg, 
-			'other', ''));
+			'other', Msg.sender));
 	});
 
 	socket.on('private msg', function (pmsg) {
