@@ -21,6 +21,16 @@ function mongoFind(db, collectionName, data, cb) {
 	stream.on("end", function() {cb();});
 } */
 
+exports.verifyUser = function (User, cb) {
+	MongoClient.connect(host, function (err, db) {
+		if (err) {
+			console.log(err);
+		} else {
+			Backend.verifyUser(User, db, cb);
+		}
+	});
+}
+
 exports.login = function (User, cb) {
 	MongoClient.connect(host, function (err, db) {
 		if (err) {

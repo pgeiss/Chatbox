@@ -1,7 +1,7 @@
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
-var cookieParser = require('cookie-parser')
+var cookieParser = require('cookie-parser');
 var nodeServer = require('http').Server(app);
 var Database = require('./database.js');
 var io = require('socket.io').listen(nodeServer);
@@ -26,16 +26,54 @@ function GlobalMessage(msg, msgType, sender) {
 	this.sender = sender;
 }
 
+function GlobalNotice(msg) {
+	this.msg = msg;
+	this.msgType = 'notice';
+	this.sender = '';
+}
+
+// function PrivateMessage(msg) {
+
+// }
+
 io.on('connection', function (socket) {
 	console.log('A user connected to ID ' + socket.id);
-	//clients.push(socket.id);
+	clients.push({id: socket.id, dn: ''});
+	
+	socket.emit('dnCheck');
+
+	socket.on('dnCheckReturn', function (dn) {
+		var socketIndex = clients.map(function (e) { 
+			return e.id; 
+		}).indexOf(socket.id);
+		if (dn === '') {
+			clients[socketIndex].dn = '' + 
+				socket.id.toString().substr(0, 10);
+			socket.emit('anonDn', '' + 
+				socket.id.toString().substr(0, 10));
+			console.log(clients[socketIndex]);
+		}
+		else {
+			clients[socketIndex].dn = dn;
+		}
+	})
 
 	socket.on('msg', function (Msg) {
-		console.log('Incoming message: ' + Msg.msg);
+		var socketIndex = clients.map(function (e) { 
+			return e.id; 
+		}).indexOf(socket.id);
+		console.log('Incoming message: ' + Msg.msg + ' from ' +
+			clients[socketIndex].dn);
 
-		socket.broadcast.emit('incoming message', new GlobalMessage(Msg.msg, 
-			'other', Msg.sender));
+		socket.broadcast.emit('incoming global message', 
+			new GlobalMessage(Msg.msg, 'other', Msg.sender));
 	});
+
+	/*socket.on('notice', function (Msg) {
+		//TODO: Need DB find function
+		console.log('Notice sent: ' + Msg.msg);
+		socket.broadcast.emit('incoming notice', new GlobalNotice(Msg.msg));
+	})*/
 
 	socket.on('private msg', function (pmsg) {
 		console.log('Incoming pm: ' + pmsg);
@@ -43,11 +81,10 @@ io.on('connection', function (socket) {
 	})
 
 	socket.on('disconnect', function () {
-		/*var toRemove = clients.indexof(socket);
-		if (index != -1) {
-			clients.splice(index, 1);
-			console.log('A user disconnected from ID ' + socket.id);
-		}*/
+		var socketIndex = clients.map(function (e) { 
+			return e.id; 
+		}).indexOf(socket.id);
+		clients.splice(socketIndex, 1);
 		console.log('A user disconnected from ID ' + socket.id);
 	});
 })
@@ -60,6 +97,8 @@ app.post('/signin', function (req, res) {
 			console.log('and was successful. User ' + id + ' (' +
 				User.user + ') logged in.');
 			res.cookie('_id', id, {maxAge: 900000, httpOnly: true});
+			res.cookie('httpUser', User.user, 
+				{maxAge: 900000, httpOnly: true});
 			res.cookie('user', User.user, {maxAge: 900000, httpOnly: false});
 			res.cookie('dispName', dn, {maxAge: 900000, httpOnly: false});
 			res.send({redirect: '/index.html'});

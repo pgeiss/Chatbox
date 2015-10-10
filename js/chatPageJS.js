@@ -10,9 +10,17 @@ for (var i = 0; i < cookieArray.length; i++) {
     }
 }
 
-socket.on('incoming message', function (msg) {
+socket.on('incoming global message', function (msg) {
     addNewMessage(msg, false);
 });
+
+socket.on('dnCheck', function () {
+    socket.emit('dnCheckReturn', displayName);
+});
+
+socket.on('anonDn', function (dn) {
+    displayName = dn;
+})
 
 function SentGlobalMessage(msg, sender) {
     this.msg = msg;
