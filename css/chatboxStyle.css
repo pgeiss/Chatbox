@@ -11,3 +11,18 @@
 	@font-size-large:         ceil((@font-size-base * 1.25)); // ~18px
 	@font-size-small:         ceil((@font-size-base * 0.85)); // ~12px
 }
+
+.admin-message {
+    background-color: #9f0038;
+    @font-size-base:          14px;
+	@font-size-large:         ceil((@font-size-base * 1.25)); // ~18px
+	@font-size-small:         ceil((@font-size-base * 0.85)); // ~12px
+}
+
+.notice-message {
+    background-color: #1874cd;
+    text-align: center;
+    @font-size-base:          14px;
+	@font-size-large:         ceil((@font-size-base * 1.25)); // ~18px
+	@font-size-small:         ceil((@font-size-base * 0.85)); // ~12px
+}

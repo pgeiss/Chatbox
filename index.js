@@ -29,7 +29,7 @@ function GlobalMessage(msg, msgType, sender) {
 function GlobalNotice(msg) {
 	this.msg = msg;
 	this.msgType = 'notice';
-	this.sender = '';
+	this.sender = 'Notice';
 }
 
 // function PrivateMessage(msg) {
@@ -38,7 +38,7 @@ function GlobalNotice(msg) {
 
 io.on('connection', function (socket) {
 	console.log('A user connected to ID ' + socket.id);
-	clients.push({id: socket.id, dn: ''});
+	clients.push({id: socket.id, dn: '', admin: false});
 	
 	socket.emit('dnCheck');
 
@@ -55,6 +55,7 @@ io.on('connection', function (socket) {
 		}
 		else {
 			clients[socketIndex].dn = dn;
+			//clients[socketIndex].admin = //Write DB function for this 
 		}
 	})
 
@@ -64,9 +65,13 @@ io.on('connection', function (socket) {
 		}).indexOf(socket.id);
 		console.log('Incoming message: ' + Msg.msg + ' from ' +
 			clients[socketIndex].dn);
-
-		socket.broadcast.emit('incoming global message', 
-			new GlobalMessage(Msg.msg, 'other', Msg.sender));
+		if (clients[socketIndex].admin) {
+			socket.broadcast.emit('incoming global message', 
+				new GlobalMessage(Msg.msg, 'admin', Msg.sender));
+		} else {
+			socket.broadcast.emit('incoming global message', 
+				new GlobalMessage(Msg.msg, 'other', Msg.sender));
+		}
 	});
 
 	/*socket.on('notice', function (Msg) {
