@@ -26,19 +26,22 @@ function GlobalMessage(msg, msgType, sender) {
 	this.sender = sender;
 }
 
-function GlobalNotice(msg) {
+function Notice(msg, sender) {
 	this.msg = msg;
 	this.msgType = 'notice';
-	this.sender = 'Notice';
+	this.sender = sender;
 }
 
-// function PrivateMessage(msg) {
-
-// }
+function PrivateMessage(msg, sender, target) {
+	this.msg = msg;
+	this.msgType = 'other private';
+	this.sender = sender;
+	this.target = target;
+}
 
 io.on('connection', function (socket) {
 	console.log('A user connected to ID ' + socket.id);
-	clients.push({id: socket.id, dn: '', admin: false});
+	clients.push({socket: socket, id: socket.id, dn: '', admin: false});
 	
 	socket.emit('dnCheck');
 
@@ -46,20 +49,27 @@ io.on('connection', function (socket) {
 		var socketIndex = clients.map(function (e) { 
 			return e.id; 
 		}).indexOf(socket.id);
+
 		if (dn === '') {
 			clients[socketIndex].dn = '' + 
 				socket.id.toString().substr(0, 10);
 			socket.emit('anonDn', '' + 
 				socket.id.toString().substr(0, 10));
-			console.log(clients[socketIndex]);
 		}
 		else {
 			clients[socketIndex].dn = dn;
 			//clients[socketIndex].admin = //Write DB function for this 
 		}
-	})
 
-	socket.on('msg', function (Msg) {
+		if (!clients[socketIndex].admin) {
+			socket.broadcast.emit('incoming global message', 
+				new Notice('User ' + 
+					clients[socketIndex].dn + ' joined the chat.', 
+					'Connection'));
+		}
+	});
+
+	socket.on('global message', function (Msg) {
 		var socketIndex = clients.map(function (e) { 
 			return e.id; 
 		}).indexOf(socket.id);
@@ -80,15 +90,32 @@ io.on('connection', function (socket) {
 		socket.broadcast.emit('incoming notice', new GlobalNotice(Msg.msg));
 	})*/
 
-	socket.on('private msg', function (pmsg) {
-		console.log('Incoming pm: ' + pmsg);
-		//TODO
+	socket.on('private message', function (Msg) {
+		console.log('Incoming pm from ' + Msg.sender + ' to ' + Msg.target +
+			': ' + Msg.msg);
+		var toMessage = clients.map(function (e) { 
+			return e.dn; 
+		}).indexOf(Msg.target);
+		if (toMessage !== -1) {
+			var socketTarget = clients[toMessage].socket;
+			socketTarget.emit('incoming global message', 
+				new PrivateMessage(Msg.msg, Msg.sender, Msg.target));
+		} else {
+			socket.emit('incoming global message', 
+				new Notice('The user you were trying to send the message' + 
+					' to is not connected.', 'Notice'))
+		}
 	})
 
 	socket.on('disconnect', function () {
 		var socketIndex = clients.map(function (e) { 
 			return e.id; 
 		}).indexOf(socket.id);
+		socket.broadcast.emit('incoming global message', 
+			new Notice('User ' + 
+				clients[socketIndex].dn + ' left the chat.',
+				 'Disconnection'));
+
 		clients.splice(socketIndex, 1);
 		console.log('A user disconnected from ID ' + socket.id);
 	});
