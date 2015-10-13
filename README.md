@@ -1,7 +1,9 @@
 # Chatbox
-I'm just trying to make a simple chatbox to further my web dev knowledge.
+A lightweight and responsive web chat application hosted on DigitalOcean. Features Node.js's Express.js and Socket.io plugins as well as MongoDB integration. Basically everything is accomplished using a combination of those three modules (as well as a few niche modules a la CookieParser).
 
-This will eventually include MongoDB integration and work through the NodeJS framework. I plan
-to host it (both during development and afterwards) on DigitalOcean.
-
-UPDATE 6/5: I switched to DigitalOcean and everything works a lot more nicely than on Heroku. Still have a bit of legwork to do on the project, though.
+# Current Development Goals
+* SSL usage for the login page.
+* Add channels like in IRC.
+* Make some pages "more" responsive (ie, to tablets and large phones instead of just small phone and PCs).
+* Add new ways to send content such as photos.
+* Create a proper frame for the chat page.
