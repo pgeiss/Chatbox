@@ -4,6 +4,7 @@ var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var nodeServer = require('http').Server(app);
 var Database = require('./database.js');
+var bleach = require('bleach');
 var io = require('socket.io').listen(nodeServer);
 var clients = [];
 app.set('socketPort', 39000);
@@ -15,6 +16,18 @@ app.use(express.static(__dirname));
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+var whitelist = [
+  'a',
+  'b',
+  'i',
+  'em',
+  'strong'
+];
+
+var options = {
+  mode: 'white',
+  list: whitelist
+};
 
 app.get('/', function (req, res) {
 	res.sendFile(__dirname + req.url);
@@ -29,7 +42,11 @@ function GlobalMessage(msg, msgType, sender) {
 function Notice(msg, sender) {
 	this.msg = msg;
 	this.msgType = 'notice';
-	this.sender = sender;
+	if (sender === undefined) {
+		this.sender = 'Notice';
+	} else {
+		this.sender = sender;
+	}
 }
 
 function PrivateMessage(msg, sender, target) {
@@ -75,33 +92,45 @@ io.on('connection', function (socket) {
 		}).indexOf(socket.id);
 		console.log('Incoming message: ' + Msg.msg + ' from ' +
 			clients[socketIndex].dn);
+		var san = bleach.sanitize(Msg.msg, options);
 		if (clients[socketIndex].admin) {
 			socket.broadcast.emit('incoming global message', 
-				new GlobalMessage(Msg.msg, 'admin', Msg.sender));
+				new GlobalMessage(san, 'admin', Msg.sender));
 		} else {
 			socket.broadcast.emit('incoming global message', 
-				new GlobalMessage(Msg.msg, 'other', Msg.sender));
+				new GlobalMessage(san, 'other', Msg.sender));
 		}
 	});
 
-	/*socket.on('notice', function (Msg) {
-		//TODO: Need DB find function
-		console.log('Notice sent: ' + Msg.msg);
-		socket.broadcast.emit('incoming notice', new GlobalNotice(Msg.msg));
-	})*/
+	socket.on('notice', function (Msg) {
+		var socketIndex = clients.map(function (e) { 
+			return e.id; 
+		}).indexOf(socket.id);
+		if (clients[socketIndex].admin === true) {
+			console.log('Notice sent: ' + Msg.msg);
+			socket.emit('incoming notice', 
+				new Notice(Msg.msg, Msg.sender));
+			socket.broadcast.emit('incoming notice', 
+				new Notice(Msg.msg, Msg.sender));
+		} else {
+			socket.emit('incoming notice', new Notice('Only admins can'
+			+ ' do that.'));
+		}
+	});
 
 	socket.on('private message', function (Msg) {
-		console.log('Incoming pm from ' + Msg.sender + ' to ' + Msg.target +
-			': ' + Msg.msg);
+		console.log('Incoming pm from ' + Msg.sender + ' to ' + 
+			Msg.target + ': ' + Msg.msg);
 		var toMessage = clients.map(function (e) { 
 			return e.dn; 
 		}).indexOf(Msg.target);
 		if (toMessage !== -1) {
 			var socketTarget = clients[toMessage].socket;
-			socketTarget.emit('incoming global message', 
-				new PrivateMessage(Msg.msg, Msg.sender, Msg.target));
+			var san = bleach.sanitize(Msg.msg, options);
+			socketTarget.emit('incoming private message', 
+				new PrivateMessage(san, Msg.sender, Msg.target));
 		} else {
-			socket.emit('incoming global message', 
+			socket.emit('incoming notice', 
 				new Notice('The user you were trying to send the message' + 
 					' to is not connected.', 'Notice'))
 		}
@@ -131,7 +160,8 @@ app.post('/signin', function (req, res) {
 			res.cookie('_id', id, {maxAge: 900000, httpOnly: true});
 			res.cookie('httpUser', User.user, 
 				{maxAge: 900000, httpOnly: true});
-			res.cookie('user', User.user, {maxAge: 900000, httpOnly: false});
+			res.cookie('user', User.user, 
+				{maxAge: 900000, httpOnly: false});
 			res.cookie('dispName', dn, {maxAge: 900000, httpOnly: false});
 			res.send({redirect: '/index.html'});
 		} else {
