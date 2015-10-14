@@ -1,3 +1,4 @@
+// Requires and Globals
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
@@ -7,11 +8,11 @@ var Database = require('./database.js');
 var bleach = require('bleach');
 var io = require('socket.io').listen(nodeServer);
 var clients = [];
+
+// Constants
 app.set('socketPort', 39000);
 app.set('port', 80);
 //app.set('port', 8000); //DEBUG USE ONLY
-
-// Constants
 app.use(express.static(__dirname));
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -20,6 +21,7 @@ var whitelist = [
   'a',
   'b',
   'i',
+  'u',
   'em',
   'strong'
 ];
@@ -29,10 +31,7 @@ var options = {
   list: whitelist
 };
 
-app.get('/', function (req, res) {
-	res.sendFile(__dirname + req.url);
-});
-
+// Constructors
 function GlobalMessage(msg, msgType, sender) {
 	this.msg = msg;
 	this.msgType = msgType;
@@ -56,6 +55,22 @@ function PrivateMessage(msg, sender, target) {
 	this.target = target;
 }
 
+// Server work
+app.get('/', function (req, res) {
+	res.sendFile(__dirname + req.url);
+});
+
+app.get('/logout', function (req, res) {
+	var cookies = req.cookies;
+	for (var cookie in cookies) {
+	  	if (cookies.hasOwnProperty(cookie)) {
+	    	res.clearCookie(cookie);
+	  	}
+	}
+	res.redirect('/');
+});
+
+// Socket.io work
 io.on('connection', function (socket) {
 	console.log('A user connected to ID ' + socket.id);
 	clients.push({socket: socket, id: socket.id, dn: '', admin: false});
@@ -150,6 +165,7 @@ io.on('connection', function (socket) {
 	});
 })
 
+// Login/Registration system
 app.post('/signin', function (req, res) {
 	console.log('Login attempt received...');
 	var User = {user: req.body.username, pw: req.body.password};
@@ -197,6 +213,7 @@ app.post('/register', function (req, res) {
 	}
 });
 
+// Start the server
 app.listen(app.get('port'), function () {
   console.log("Node app is running on port: " + app.get('port'));
 });
@@ -206,6 +223,8 @@ nodeServer.listen(app.get('socketPort'), function () {
 		app.get('socketPort'));
 });
 
+// To prevent malicious users from editing JS at the web page level 
+// to submit bad accounts.
 function validateUser(User) {
 	return typeof User === 'object' && typeof User.user === 'string' && 
 		typeof User.pw === 'string' && typeof User.dn === 'string' && 

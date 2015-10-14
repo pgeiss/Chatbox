@@ -8,7 +8,7 @@ var third =      	'<span class="caret"></span></a>' +
                     '<li><a href="/chat.html">Join chat</a></li>' +
                     '<li role="separator" class="divider"></li>' +
                     '<li><a href="#">Account</a></li>' +
-                    '<li><a href="#">Log out</a></li>' +
+                    '<li><a href="/logout">Log out</a></li>' +
                   '</ul></li>';
 
 var second = '';

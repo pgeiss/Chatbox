@@ -1,22 +1,26 @@
+.row {
+    padding-bottom: .33em;
+}
+
 .user-message {
     background-color: #204d74;
     @font-size-base:          14px;
 	@font-size-large:         ceil((@font-size-base * 1.25)); // ~18px
-	@font-size-small:         ceil((@font-size-base * 0.85)); // ~12px
+	@font-size-small:         ceil((@font-size-base * 0.785)); // ~11px
 }
 
 .other-message {
     background-color: #004444;
     @font-size-base:          14px;
 	@font-size-large:         ceil((@font-size-base * 1.25)); // ~18px
-	@font-size-small:         ceil((@font-size-base * 0.85)); // ~12px
+	@font-size-small:         ceil((@font-size-base * 0.785)); // ~11px
 }
 
 .admin-message {
     background-color: #9f0038;
     @font-size-base:          14px;
 	@font-size-large:         ceil((@font-size-base * 1.25)); // ~18px
-	@font-size-small:         ceil((@font-size-base * 0.85)); // ~12px
+	@font-size-small:         ceil((@font-size-base * 0.785)); // ~11px
 }
 
 .notice-message {
@@ -24,12 +28,12 @@
     text-align: center;
     @font-size-base:          14px;
 	@font-size-large:         ceil((@font-size-base * 1.25)); // ~18px
-	@font-size-small:         ceil((@font-size-base * 0.85)); // ~12px
+	@font-size-small:         ceil((@font-size-base * 0.785)); // ~11px
 }
 
 .private-message {
     background-color: #8e5263;
     @font-size-base:          14px;
     @font-size-large:         ceil((@font-size-base * 1.25)); // ~18px
-    @font-size-small:         ceil((@font-size-base * 0.85)); // ~12px
+    @font-size-small:         ceil((@font-size-base * 0.785)); // ~11px
 }
