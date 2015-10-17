@@ -38,33 +38,52 @@
         </div><!--/.nav-collapse -->
     </div>
 </nav>
-<div class="alert alert-info" role="alert">Username should contain 4-16 regular characters (a-z, 0-9, _) and must be unique.<br>
+
+<div class="container">
+<div class="col-xs-offset-1 col-xs-10 col-lg-offset-1 col-lg-6 alert alert-info" role="alert">Username should contain 4-16 regular characters (a-z, 0-9, _) and must be unique.<br>
 Password can contain anything but must be at least 6 characters long.<br>
-Display Name is your reserved display name. You <i>can</i> change your display name in the chat and it won't change your reserved name.</div>
+Display Name is your reserved display name. You <i>can</i> change your display name in the chat and it won't change your reserved name.
+</div>
+<div class="col-xs-1 col-lg-5"></div>
+</div>
+
 <div class="insert-extra-info-here"></div>
+
+<div class="container">
 <form class="form-horizontal" id="user-pw-form" method="post" 
 action="/register">
     <div class="form-group">
-        <label for="inputDesiredUsername" class="col-sm-2 control-label">Username</label>
-        <div class="col-sm-10">
-            <input type="text" class="form-control" name="username" id="inputDesiredUsername" placeholder="Username" style="width: 30%;">
+    <div class="row">
+        <label for="inputDesiredUsername" class="col-xs-offset-1 col-xs-3 col-lg-offset-2 col-lg-1 control-label">Username</label>
+        <div class="col-xs-6 col-lg-3">
+            <input type="text" class="form-control" name="username" id="inputDesiredUsername" placeholder="Username">
         </div>
-        <label for="inputDesiredPassword" class="col-sm-2 control-label">Password</label>
-        <div class="col-sm-10">
-            <input type="password" class="form-control" name="password" id="inputDesiredPassword" placeholder="********" style="width: 30%;">
+        <div class="col-xs-2 col-lg-6"></div>
+    </div>
+    <div class="row">
+        <label for="inputDesiredPassword" class="col-xs-offset-1 col-xs-3 col-lg-offset-2 col-lg-1 control-label">Password</label>
+        <div class="col-xs-6 col-lg-3">
+            <input type="password" class="form-control" name="password" id="inputDesiredPassword" placeholder="********">
         </div>
-        <label for="displayName" class="col-sm-2 control-label">
+        <div class="col-xs-2 col-lg-6"></div>
+    </div>
+    <div class="row">
+        <label for="displayName" class="col-xs-offset-1 col-xs-3 col-lg-offset-2 col-lg-1 control-label">
         Display Name</label>
-        <div class="col-sm-10">
-            <input type="text" class="form-control" name="dispName" id="displayName" placeholder="Display Name" style="width: 30%;">
+        <div class="col-xs-6 col-lg-3">
+            <input type="text" class="form-control" name="dispName" id="displayName" placeholder="Display Name">
         </div>
+        <div class="col-xs-2 col-lg-6"></div>
+    </div>
     </div>
     <div class="form-group">
-        <div class="col-sm-offset-2 col-sm-10">
-            <button type="submit" class="btn btn-success" id="form-submit">Register</button>
+        <div class="col-xs-offset-1 col-xs-11 col-lg-offset-3 col-lg-3">
+            <button type="submit" class="btn btn-success" id="form-submit">Register New Account</button>
         </div>
+        <div class="col-lg-6"></div>
     </div>
 </form>
+</div>
 
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>

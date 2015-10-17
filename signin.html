@@ -16,7 +16,7 @@
 </head>
 <body>
 <nav class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container">
+    <div class="container-fluid">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
                 <span class="sr-only">Toggle navigation</span>
@@ -33,34 +33,51 @@
                 <li><a href="register.html">Register</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right insert-user">
-                <!--Username inserted here automatically-->
+
             </ul>
         </div><!--/.nav-collapse -->
     </div>
 </nav>
 <div class="insert-extra-info-here"></div>
-<form class="form-vertical" id="user-pw-form" action="/signin" method="post">
-    <div class="form-group">
-        <label for="inputUsername" class="col-sm-2 control-label"></label>
-        <div class="col-sm-10">
-            <input type="text" class="form-control" id="inputUsername" name="username" placeholder="Username" style="width: 10%;">
+<div class="container">
+    <form class="form-vertical" id="user-pw-form" action="/signin" method="post">
+        <div class="form-group">
+            <label for="inputUsername" class="control-label"></label>
+            <div class="row">
+                <div class="col-xs-offset-1 col-xs-6 col-lg-offset-1 col-lg-3">
+                    <input type="text" class="form-control" id="inputUsername" name="username" placeholder="Username">
+                </div>
+                <div class="col-xs-5 col-lg-8"></div>
+            </div>
+            <label for="inputPassword" class="control-label"></label>
+            <div class="row">
+                <div class="col-xs-offset-1 col-xs-6 col-lg-offset-1 col-lg-3">
+                    <input type="password" class="form-control" id="inputPassword" name="password" placeholder="********">
+                </div>
+                <div class="col-xs-5 col-lg-8"></div>
+            </div>
         </div>
-        <label for="inputPassword" class="col-sm-2 control-label"></label>
-        <div class="col-sm-10">
-            <input type="password" class="form-control" id="inputPassword" name="password" placeholder="********" style="width: 10%;">
+        <div class="form-group">
+            <div class="row">
+                <div class="col-xs-offset-1 col-xs-3 submit-button">
+                    <button type="submit" class="btn btn-success">Sign In</button>
+                </div>
+                <div class="col-xs-8"></div>
+            </div>
         </div>
+    </form>
+    <div class="row" style="padding-top: 2em">
+        <div class="col-xs-offset-1 col-xs-6">
+            <p>Need an account?</p>
+        </div>
+        <div class="col-xs-5"></div>
     </div>
-    <div class="form-group">
-        <div class="col-sm-offset-2 col-sm-10 submit-button">
-            <button type="submit" class="btn btn-success">Sign In</button>
+    <div class="row">
+        <div class="col-xs-offset-1 col-xs-5">
+            <a href="register.html"><button type="button" class="btn btn-info">Register here</button></a>
         </div>
+        <div class="col-xs-6"></div>
     </div>
-</form>
-<div class="col-sm-offset-2 col-sm-10">
-    <p><b><i>-- or, instead... --</i></b></p>
-</div>
-<div class="col-sm-offset-2 col-sm-10">
-    <a href="register.html"><button type="button" class="btn btn-info">Register a new account here</button></a>
 </div>
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
