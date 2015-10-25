@@ -31,6 +31,16 @@ exports.verifyUser = function (User, cb) {
 	});
 }
 
+exports.checkAdmin = function (User, cb) {
+	MongoClient.connect(host, function (err, db) {
+		if (err) {
+			console.log(err);
+		} else {
+			Backend.checkAdmin(User, db, cb);
+		}
+	})
+}
+
 exports.login = function (User, cb) {
 	MongoClient.connect(host, function (err, db) {
 		if (err) {

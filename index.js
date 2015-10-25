@@ -60,6 +60,25 @@ app.get('/', function (req, res) {
 	res.sendFile(__dirname + req.url);
 });
 
+app.get('/chat', function (req, res, next) {
+	var cookies = req.cookies;
+	var user = cookies.httpUser;
+	var User = {};
+
+	if (user !== undefined) {
+		User.user = user;
+		Database.verifyUser(User, function (dn) {
+			res.cookie('dispName', dn, {maxAge: 900000, httpOnly: false})
+			next();
+		});
+	} else {
+		next();
+	}
+
+}, function (req, res) {
+	res.redirect('/chat.html');
+});
+
 app.get('/logout', function (req, res) {
 	var cookies = req.cookies;
 	for (var cookie in cookies) {
@@ -90,7 +109,12 @@ io.on('connection', function (socket) {
 		}
 		else {
 			clients[socketIndex].dn = dn;
-			//clients[socketIndex].admin = //Write DB function for this 
+			var user = {};
+			user.dn = dn;
+			Database.checkAdmin(user, function (bool) {
+				if (bool)
+					clients[socketIndex].admin = true;
+			});
 		}
 
 		if (!clients[socketIndex].admin) {
@@ -178,7 +202,6 @@ app.post('/signin', function (req, res) {
 				{maxAge: 900000, httpOnly: true});
 			res.cookie('user', User.user, 
 				{maxAge: 900000, httpOnly: false});
-			res.cookie('dispName', dn, {maxAge: 900000, httpOnly: false});
 			res.send({redirect: '/index.html'});
 		} else {
 			console.log('and failed');
