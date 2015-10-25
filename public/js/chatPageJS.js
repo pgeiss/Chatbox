@@ -94,7 +94,6 @@ $('form').submit(function (e) {
         }
     }
     
-    scrollDown();
     $(inputSelector).val('');
     return false;
 });
@@ -201,4 +200,5 @@ function addNewMessage(Msg) {
 
         });
     }
+    scrollDown();
 }
