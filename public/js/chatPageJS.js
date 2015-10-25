@@ -1,5 +1,5 @@
-//var socket = io.connect('//app.petergeiss.me:39000');
-var socket = io.connect('//localhost:39000'); // DEBUG USE ONLY
+var socket = io.connect('//app.petergeiss.me:39000');
+//var socket = io.connect('//localhost:39000'); // DEBUG USE ONLY
 var cookieArray = document.cookie.split('; ');
 var displayName = '';
 for (var i = 0; i < cookieArray.length; i++) {
