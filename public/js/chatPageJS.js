@@ -55,7 +55,6 @@ $('form').submit(function (e) {
     //var enteredMessage = new SentMessage($(inputSelector).val(), 
       //  displayName);
     var enteredMessage = $(inputSelector).val();
-    console.log(enteredMessage)
     e.preventDefault();
 
     if (enteredMessage.length !== 0) {
@@ -95,9 +94,16 @@ $('form').submit(function (e) {
         }
     }
     
+    scrollDown();
     $(inputSelector).val('');
     return false;
 });
+
+function scrollDown() {
+    $('html, body').animate({
+        scrollTop: $(document).height()
+    }, 600);
+}
 
 function addOwnMessage(Msg) {
     var toSend = Msg;
