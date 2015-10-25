@@ -11,9 +11,9 @@ var clients = [];
 
 // Constants
 app.set('socketPort', 39000);
-app.set('port', 80);
-//app.set('port', 8000); //DEBUG USE ONLY
-app.use(express.static(__dirname));
+//app.set('port', 80);
+app.set('port', 8000); //DEBUG USE ONLY
+app.use(express.static(__dirname + "/public"));
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());

@@ -37,3 +37,14 @@
     @font-size-large:         ceil((@font-size-base * 1.25)); // ~18px
     @font-size-small:         ceil((@font-size-base * 0.785)); // ~11px
 }
+
+.input-bar {
+        position: fixed;
+        bottom: 0;
+        background-color: #343434;
+    }
+    
+#empty-space {
+        padding-bottom: 3em;
+        color: #343434;
+    }
