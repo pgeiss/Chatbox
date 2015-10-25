@@ -131,14 +131,14 @@ function addNewMessage(Msg) {
         case 'own':
             liClass = 'user-message';
             startCol = startCol + 
-                '\<div class="col-xs-3 col-lg-7"\>\</div\>';
+                '\<div class="col-xs-3 col-lg-6"\>\</div\>';
             endCol = '\<div class="col-xs-1 col-lg-1"\>\</div\>' + endCol;
             break;
 
         case 'own private':
             liClass = 'private-message';
             startCol = startCol + 
-                '\<div class="col-xs-3 col-lg-7"\>\</div\>';
+                '\<div class="col-xs-3 col-lg-6"\>\</div\>';
             endCol = '\<div class="col-xs-1 col-lg-1"\>\</div\>' + endCol;
             break;
 
@@ -146,21 +146,21 @@ function addNewMessage(Msg) {
             liClass = 'other-message';
             startCol = startCol + 
                 '\<div class="col-xs-1 col-lg-1"\>\</div\>';
-            endCol = '\<div class="col-xs-3 col-lg-7"\>\</div\>' + endCol;
+            endCol = '\<div class="col-xs-3 col-lg-6"\>\</div\>' + endCol;
             break;
 
         case 'other private':
             liClass = 'private-message';
             startCol = startCol + 
                 '\<div class="col-xs-1 col-lg-1"\>\</div\>';
-            endCol = '\<div class="col-xs-3 col-lg-7"\>\</div\>' + endCol;
+            endCol = '\<div class="col-xs-3 col-lg-6"\>\</div\>' + endCol;
             break;
 
         case 'admin':
             liClass = 'admin-message';
             startCol = startCol + 
                 '\<div class="col-xs-1 col-lg-1"\>\</div\>';
-            endCol = '\<div class="col-xs-3 col-lg-7"\>\</div\>' + endCol;
+            endCol = '\<div class="col-xs-3 col-lg-6"\>\</div\>' + endCol;
             break;
 
         case 'notice':
@@ -175,7 +175,7 @@ function addNewMessage(Msg) {
     }
     if (Msg.msgType === 'own private' || Msg.msgType === 'other private') {
         $(liSelector).append(startCol + 
-            '\<div class="col-xs-8 col-lg-4"\>' + 
+            '\<div class="col-xs-8 col-lg-5"\>' + 
             '\<li class=\"list-group-item ' + 
             liClass + '\"\>' + '<span title="' + new Date() + '">' +
             Msg.sender + ' -> ' + Msg.target + ': ' +
@@ -183,7 +183,7 @@ function addNewMessage(Msg) {
     } else if (Msg.msgType !== 'notice') {
         $(document).ready(function () {
             $(liSelector).append(startCol + 
-                '\<div class="col-xs-8 col-lg-4"\>' + 
+                '\<div class="col-xs-8 col-lg-5"\>' + 
                 '\<li class=\"list-group-item ' + 
                 liClass + '\"\>' + '<span title="' + new Date() + '">' +
                 Msg.sender + ': ' +
