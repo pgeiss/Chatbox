@@ -101,7 +101,7 @@ $('form').submit(function (e) {
 function scrollDown() {
     $('html, body').animate({
         scrollTop: $(document).height()
-    }, 600);
+    }, 100);
 }
 
 function addOwnMessage(Msg) {
