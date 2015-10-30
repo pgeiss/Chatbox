@@ -1,5 +1,5 @@
-var socket = io.connect('//app.petergeiss.com:39000');
-//var socket = io.connect('//localhost:39000'); // DEBUG USE ONLY
+//var socket = io.connect('//app.petergeiss.com:39000');
+var socket = io.connect('//localhost:8443'); // DEBUG USE ONLY
 var cookieArray = document.cookie.split('; ');
 var displayName = '';
 for (var i = 0; i < cookieArray.length; i++) {
@@ -19,6 +19,10 @@ socket.on('incoming private message', function (Msg) {
 })
 socket.on('incoming notice', function (Msg) {
     addNewMessage(Msg);
+})
+
+socket.on('app check', function () {
+    socket.emit('app check return', false);
 })
 
 socket.on('dnCheck', function () {
@@ -126,61 +130,82 @@ function addNewMessage(Msg) {
     var startCol = '\<div class="row"\>';
     var endCol = '\</div\>';
 
+    // Used in the switch below
+    function generateHTML(inputClass, xsStart, lgStart, xsEnd, lgEnd) {
+        liClass = inputClass;
+        startCol = startCol + '\<div class="col-xs-' + xsStart + 
+        ' col-lg-' + lgStart + '"\>\</div\>';
+        endCol = '\<div class="col-xs-' + xsEnd + ' col-lg-' + lgEnd +
+        '"\>\</div\>' + endCol;
+    }
+
     switch(Msg.msgType) {
 
         case 'own':
-            liClass = 'user-message';
-            startCol = startCol + 
-                '\<div class="col-xs-3 col-lg-6"\>\</div\>';
-            endCol = '\<div class="col-xs-1 col-lg-1"\>\</div\>' + endCol;
+            generateHTML('user-message', 3, 6, 1, 1);
+            // liClass = 'user-message';
+            // startCol = startCol + 
+            //     '\<div class="col-xs-3 col-lg-6"\>\</div\>';
+            // endCol = '\<div class="col-xs-1 col-lg-1"\>\</div\>' + endCol;
             break;
 
         case 'own private':
-            liClass = 'private-message';
-            startCol = startCol + 
-                '\<div class="col-xs-3 col-lg-6"\>\</div\>';
-            endCol = '\<div class="col-xs-1 col-lg-1"\>\</div\>' + endCol;
+            generateHTML('private-message', 3, 6, 1, 1);
+            // liClass = 'private-message';
+            // startCol = startCol + 
+            //     '\<div class="col-xs-3 col-lg-6"\>\</div\>';
+            // endCol = '\<div class="col-xs-1 col-lg-1"\>\</div\>' + endCol;
             break;
 
         case 'other':
-            liClass = 'other-message';
-            startCol = startCol + 
-                '\<div class="col-xs-1 col-lg-1"\>\</div\>';
-            endCol = '\<div class="col-xs-3 col-lg-6"\>\</div\>' + endCol;
+            generateHTML('other-message', 1, 1, 3, 6);
+            // liClass = 'other-message';
+            // startCol = startCol + 
+            //     '\<div class="col-xs-1 col-lg-1"\>\</div\>';
+            // endCol = '\<div class="col-xs-3 col-lg-6"\>\</div\>' + endCol;
             break;
 
         case 'other private':
-            liClass = 'private-message';
-            startCol = startCol + 
-                '\<div class="col-xs-1 col-lg-1"\>\</div\>';
-            endCol = '\<div class="col-xs-3 col-lg-6"\>\</div\>' + endCol;
+            generateHTML('private-message', 1, 1, 3, 6);
+            // liClass = 'private-message';
+            // startCol = startCol + 
+            //     '\<div class="col-xs-1 col-lg-1"\>\</div\>';
+            // endCol = '\<div class="col-xs-3 col-lg-6"\>\</div\>' + endCol;
             break;
 
         case 'admin':
-            liClass = 'admin-message';
-            startCol = startCol + 
-                '\<div class="col-xs-1 col-lg-1"\>\</div\>';
-            endCol = '\<div class="col-xs-3 col-lg-6"\>\</div\>' + endCol;
+            geerateHTML('admin-message', 1, 1, 3, 6);
+            // liClass = 'admin-message';
+            // startCol = startCol + 
+            //     '\<div class="col-xs-1 col-lg-1"\>\</div\>';
+            // endCol = '\<div class="col-xs-3 col-lg-6"\>\</div\>' + endCol;
             break;
 
         case 'notice':
-            liClass = 'notice-message';
-            startCol = startCol + 
-                '\<div class="col-xs-1 col-lg-1"\>\</div\>';
-            endCol = '\<div class="col-xs-1 col-lg-1"\>\</div\>' + endCol;
+            generateHTML('notice-message', 1, 1, 1, 1);
+            // liClass = 'notice-message';
+            // startCol = startCol + 
+            //     '\<div class="col-xs-1 col-lg-1"\>\</div\>';
+            // endCol = '\<div class="col-xs-1 col-lg-1"\>\</div\>' + endCol;
             break;
 
         default:
             throw 'Undefined message type received!';
     }
+
+    // Add the message to the HTML depending on what kind of message it is.
     if (Msg.msgType === 'own private' || Msg.msgType === 'other private') {
-        $(liSelector).append(startCol + 
-            '\<div class="col-xs-8 col-lg-5"\>' + 
-            '\<li class=\"list-group-item ' + 
-            liClass + '\"\>' + '<span title="' + new Date() + '">' +
-            Msg.sender + ' -> ' + Msg.target + ': ' +
-            Msg.msg + '\</span\>\</li\>\</div\>' + endCol);
-    } else if (Msg.msgType !== 'notice') {
+        $(document).ready(function () {
+            $(liSelector).append(startCol + 
+                '\<div class="col-xs-8 col-lg-5"\>' + 
+                '\<li class=\"list-group-item ' + 
+                liClass + '\"\>' + '<span title="' + new Date() + '">' +
+                Msg.sender + ' -> ' + Msg.target + ': ' +
+                Msg.msg + '\</span\>\</li\>\</div\>' + endCol);
+        });
+    }
+     
+    else if (Msg.msgType !== 'notice') {
         $(document).ready(function () {
             $(liSelector).append(startCol + 
                 '\<div class="col-xs-8 col-lg-5"\>' + 
@@ -189,7 +214,9 @@ function addNewMessage(Msg) {
                 Msg.sender + ': ' +
                 Msg.msg + '\</span\>\</li\>\</div\>' + endCol);
         });  
-    } else {
+    } 
+    
+    else {
         $(document).ready(function () {
             $(liSelector).append(startCol + 
                 '\<div class="col-xs-10 col-lg-10"\>' + 
@@ -200,5 +227,6 @@ function addNewMessage(Msg) {
 
         });
     }
-    scrollDown();
+    
+    scrollDown(); // The user should see new messages as they're posted
 }

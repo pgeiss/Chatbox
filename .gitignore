@@ -61,3 +61,7 @@ key/chatbox_pub
 databaseBackend.js
 
 *.pem
+
+public/js/jquery.form.js
+
+public/js/jquery.min.js

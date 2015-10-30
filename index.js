@@ -3,20 +3,32 @@ var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
-var nodeServer = require('http').Server(app);
+var https = require('https');
+var http = require('http');
 var Database = require('./database.js');
 var bleach = require('bleach');
-var io = require('socket.io').listen(nodeServer);
+var socketIo = require('socket.io');
+var fs = require('fs');
 var clients = [];
 
 // Constants
-app.set('socketPort', 39000);
-app.set('port', 80);
-//app.set('port', 8000); //DEBUG USE ONLY
+app.set('httpPort', 80);
+app.set('httpsPort', 443);
+//app.set('httpsPort', 8443) // DEBUG USE ONLY
+//app.set('httpPort', 8000); //DEBUG USE ONLY
+//app.set('socketPort', 39000);
 app.use(express.static(__dirname + "/public"));
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
+app.use(function (req, res, next) {
+	if(!req.secure) {
+    	return res.redirect(['https://', req.get('Host'), req.url].join(''));
+  	}
+  	next();
+});
+
 var whitelist = [
   'a',
   'b',
@@ -27,6 +39,14 @@ var whitelist = [
 ];
 
 var options = {
+	key: fs.readFileSync('private-key.pem'),
+	cert: fs.readFileSync('public-cert.pem')
+};
+
+var nodeServer = https.createServer(options, app);
+var io = socketIo.listen(nodeServer);
+
+var bleachOptions = {
   mode: 'white',
   list: whitelist
 };
@@ -93,8 +113,22 @@ app.get('/logout', function (req, res) {
 io.on('connection', function (socket) {
 	console.log('A user connected to ID ' + socket.id);
 	clients.push({socket: socket, id: socket.id, dn: '', admin: false});
-	
-	socket.emit('dnCheck');
+
+	socket.emit('app check');
+
+	socket.on('app check return', function (isMobile) {
+		var socketIndex = clients.map(function (e) { 
+			return e.id; 
+		}).indexOf(socket.id);
+
+		if (isMobile) {
+			clients[socketIndex].mobile = true;
+		}
+		else {
+			clients[socketIndex].mobile = false;
+			socket.emit('dnCheck');
+		}
+	});
 
 	socket.on('dnCheckReturn', function (dn) {
 		var socketIndex = clients.map(function (e) { 
@@ -131,7 +165,7 @@ io.on('connection', function (socket) {
 		}).indexOf(socket.id);
 		console.log('Incoming message: ' + Msg.msg + ' from ' +
 			clients[socketIndex].dn);
-		var san = bleach.sanitize(Msg.msg, options);
+		var san = bleach.sanitize(Msg.msg, bleachOptions);
 		if (clients[socketIndex].admin) {
 			socket.broadcast.emit('incoming global message', 
 				new GlobalMessage(san, 'admin', Msg.sender));
@@ -165,7 +199,7 @@ io.on('connection', function (socket) {
 		}).indexOf(Msg.target);
 		if (toMessage !== -1) {
 			var socketTarget = clients[toMessage].socket;
-			var san = bleach.sanitize(Msg.msg, options);
+			var san = bleach.sanitize(Msg.msg, bleachOptions);
 			socketTarget.emit('incoming private message', 
 				new PrivateMessage(san, Msg.sender, Msg.target));
 		} else {
@@ -237,14 +271,17 @@ app.post('/register', function (req, res) {
 });
 
 // Start the server
-app.listen(app.get('port'), function () {
-  console.log("Node app is running on port: " + app.get('port'));
+nodeServer.listen(app.get('httpsPort'), function () {
+	console.log('App and Socket.io are HTTPS secured and listening to port '
+		+ app.get('httpsPort'));
 });
 
-nodeServer.listen(app.get('socketPort'), function () {
-	console.log("Socket.io server is listening to port " + 
-		app.get('socketPort'));
-});
+// Redirect stubborn http users
+http.createServer(function (req, res) {
+    res.writeHead(301, { "Location": "https://" + 
+    	req.headers['host'] + req.url });
+    res.end();
+}).listen(80);
 
 // To prevent malicious users from editing JS at the web page level 
 // to submit bad accounts.
