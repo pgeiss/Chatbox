@@ -65,3 +65,5 @@ databaseBackend.js
 public/js/jquery.form.js
 
 public/js/jquery.min.js
+
+*.key

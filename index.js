@@ -12,10 +12,10 @@ var fs = require('fs');
 var clients = [];
 
 // Constants
-app.set('httpPort', 80);
+var httpPort = 80;
 app.set('httpsPort', 443);
-//app.set('httpsPort', 8443) // DEBUG USE ONLY
-//app.set('httpPort', 8000); //DEBUG USE ONLY
+// var httpPort = 8000; //DEBUG USE ONLY
+// app.set('httpsPort', 8443); // DEBUG USE ONLY
 //app.set('socketPort', 39000);
 app.use(express.static(__dirname + "/public"));
 app.use(cookieParser());
@@ -112,7 +112,8 @@ app.get('/logout', function (req, res) {
 // Socket.io work
 io.on('connection', function (socket) {
 	console.log('A user connected to ID ' + socket.id);
-	clients.push({socket: socket, id: socket.id, dn: '', admin: false});
+	clients.push({socket: socket, id: socket.id, dn: '',
+	 admin: false, mobile: false});
 
 	socket.emit('app check');
 
@@ -187,7 +188,7 @@ io.on('connection', function (socket) {
 				new Notice(Msg.msg, Msg.sender));
 		} else {
 			socket.emit('incoming notice', new Notice('Only admins can'
-			+ ' do that.'));
+			+ ' do that.', 'Err'));
 		}
 	});
 
@@ -205,7 +206,7 @@ io.on('connection', function (socket) {
 		} else {
 			socket.emit('incoming notice', 
 				new Notice('The user you were trying to send the message' + 
-					' to is not connected.', 'Notice'))
+					' to is not connected.', 'Err'))
 		}
 	})
 
@@ -281,7 +282,7 @@ http.createServer(function (req, res) {
     res.writeHead(301, { "Location": "https://" + 
     	req.headers['host'] + req.url });
     res.end();
-}).listen(80);
+}).listen(httpPort);
 
 // To prevent malicious users from editing JS at the web page level 
 // to submit bad accounts.

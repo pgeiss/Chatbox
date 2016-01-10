@@ -1,5 +1,5 @@
-//var socket = io.connect('//app.petergeiss.com:39000');
-var socket = io.connect('//localhost:8443'); // DEBUG USE ONLY
+var socket = io.connect('//app.petergeiss.com:39000');
+//var socket = io.connect('//localhost:8443'); // DEBUG USE ONLY
 var cookieArray = document.cookie.split('; ');
 var displayName = '';
 for (var i = 0; i < cookieArray.length; i++) {
@@ -174,7 +174,7 @@ function addNewMessage(Msg) {
             break;
 
         case 'admin':
-            geerateHTML('admin-message', 1, 1, 3, 6);
+            generateHTML('admin-message', 1, 1, 3, 6);
             // liClass = 'admin-message';
             // startCol = startCol + 
             //     '\<div class="col-xs-1 col-lg-1"\>\</div\>';
