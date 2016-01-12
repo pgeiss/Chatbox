@@ -52,6 +52,33 @@ var bleachOptions = {
 };
 
 // Constructors
+function Client(socket, id) {
+	this.socket = socket;
+	this.id = id;
+	this.dn = '';
+	this.admin = false;
+	this.mobile = false;
+
+	// Object Functions
+	this.setDisplayName = function (dn) {
+		if (this.dn === '') {
+			this.dn = dn;
+		} else throw 'You tried to set display name a second time!';
+	}
+
+	this.isAdmin = function () {
+		return this.admin;
+	}
+
+	this.setAdmin = function (bool) {
+		this.admin = bool;
+	}
+
+	this.userOnMobile = function (bool) {
+		this.mobile = bool;
+	}
+}
+
 function GlobalMessage(msg, msgType, sender) {
 	this.msg = msg;
 	this.msgType = msgType;
@@ -112,8 +139,7 @@ app.get('/logout', function (req, res) {
 // Socket.io work
 io.on('connection', function (socket) {
 	console.log('A user connected to ID ' + socket.id);
-	clients.push({socket: socket, id: socket.id, dn: '',
-	 admin: false, mobile: false});
+	clients.push(new Client(socket, socket.id));
 
 	socket.emit('app check');
 
@@ -123,12 +149,10 @@ io.on('connection', function (socket) {
 		}).indexOf(socket.id);
 
 		if (isMobile) {
-			clients[socketIndex].mobile = true;
+			clients[socketIndex].userOnMobile(true);
 		}
-		else {
-			clients[socketIndex].mobile = false;
-			socket.emit('dnCheck');
-		}
+
+		socket.emit('dnCheck');
 	});
 
 	socket.on('dnCheckReturn', function (dn) {
@@ -137,22 +161,21 @@ io.on('connection', function (socket) {
 		}).indexOf(socket.id);
 
 		if (dn === '') {
-			clients[socketIndex].dn = '' + 
-				socket.id.toString().substr(0, 10);
-			socket.emit('anonDn', '' + 
-				socket.id.toString().substr(0, 10));
+			var randomName = socket.id.toString().substr(0, 10)
+			clients[socketIndex].setDisplayName(randomName);
+			socket.emit('anonDn', randomName);
 		}
 		else {
-			clients[socketIndex].dn = dn;
+			clients[socketIndex].setDisplayName(dn);
 			var user = {};
 			user.dn = dn;
 			Database.checkAdmin(user, function (bool) {
 				if (bool)
-					clients[socketIndex].admin = true;
+					clients[socketIndex].setAdmin(true);
 			});
 		}
 
-		if (!clients[socketIndex].admin) {
+		if (!clients[socketIndex].isAdmin()) {
 			socket.broadcast.emit('incoming global message', 
 				new Notice('User ' + 
 					clients[socketIndex].dn + ' joined the chat.', 
@@ -167,7 +190,7 @@ io.on('connection', function (socket) {
 		console.log('Incoming message: ' + Msg.msg + ' from ' +
 			clients[socketIndex].dn);
 		var san = bleach.sanitize(Msg.msg, bleachOptions);
-		if (clients[socketIndex].admin) {
+		if (clients[socketIndex].isAdmin()) {
 			socket.broadcast.emit('incoming global message', 
 				new GlobalMessage(san, 'admin', Msg.sender));
 		} else {
@@ -180,7 +203,7 @@ io.on('connection', function (socket) {
 		var socketIndex = clients.map(function (e) { 
 			return e.id; 
 		}).indexOf(socket.id);
-		if (clients[socketIndex].admin === true) {
+		if (clients[socketIndex].isAdmin()) {
 			console.log('Notice sent: ' + Msg.msg);
 			socket.emit('incoming notice', 
 				new Notice(Msg.msg, Msg.sender));
