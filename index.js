@@ -1,20 +1,21 @@
 // Requires and Globals
-var express = require('express');
-var app = express();
-var bodyParser = require('body-parser');
-var cookieParser = require('cookie-parser');
-var https = require('https');
-var http = require('http');
-var Database = require('./database.js');
-var bleach = require('bleach');
-var socketIo = require('socket.io');
-var fs = require('fs');
+const express = require('express');
+const app = express();
+const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
+const https = require('https');
+const http = require('http');
+const Database = require('./database.js');
+const bleach = require('bleach');
+const SocketIO = require('socket.io');
+const fs = require('fs');
 var clients = [];
+var channels = new Map(); // Map<String, Array<Client>>
 
 // Constants
-var httpPort = 80;
+const httpPort = 80;
 app.set('httpsPort', 443);
-// var httpPort = 8000; //DEBUG USE ONLY
+// const httpPort = 8000; //DEBUG USE ONLY
 // app.set('httpsPort', 8443); // DEBUG USE ONLY
 //app.set('socketPort', 39000);
 app.use(express.static(__dirname + "/public"));
@@ -43,8 +44,8 @@ var options = {
 	cert: fs.readFileSync('public-cert.pem')
 };
 
-var nodeServer = https.createServer(options, app);
-var io = socketIo.listen(nodeServer);
+const nodeServer = https.createServer(options, app);
+const io = SocketIO.listen(nodeServer);
 
 var bleachOptions = {
   mode: 'white',
@@ -58,6 +59,7 @@ function Client(socket, id) {
 	this.dn = '';
 	this.admin = false;
 	this.mobile = false;
+	this.login = false;
 
 	// Object Functions
 	this.setDisplayName = function (dn) {
@@ -74,6 +76,10 @@ function Client(socket, id) {
 		this.admin = bool;
 	}
 
+	this.setLogin = function (bool) {
+		this.login = bool;
+	}
+
 	this.userOnMobile = function (bool) {
 		this.mobile = bool;
 	}
@@ -83,6 +89,34 @@ function GlobalMessage(msg, msgType, sender) {
 	this.msg = msg;
 	this.msgType = msgType;
 	this.sender = sender;
+}
+
+function ChannelMessage(msg, sender, targetCh) {
+	this.msg = msg;
+	this.msgType = 'channel';
+	this.sender = sender;
+	this.targetCh = targetCh;
+}
+
+function ChannelModMessage(msg, sender, targetCh) {
+	this.msg = msg;
+	this.msgType = 'channelMod';
+	this.sender = sender;
+	this.targetCh = targetCh;
+}
+
+function ChannelOwnerMessage(msg, sender, targetCh) {
+	this.msg = msg;
+	this.msgType = 'channelOwner';
+	this.sender = sender;
+	this.targetCh = targetCh;
+}
+
+function ChannelAdminMessage(msg, sender, targetCh) {
+	this.msg = msg;
+	this.msgType = 'channelAdmin';
+	this.sender = sender;
+	this.targetCh = targetCh;
 }
 
 function Notice(msg, sender) {
@@ -199,6 +233,11 @@ io.on('connection', function (socket) {
 		}
 	});
 
+	socket.on('channel message', function (Msg) {
+		const usersToSendTo = channels.get(Msg.channel); // Array<Client>
+		socket.emit('incoming notice', new Notice('Not ready yet.', 'Err'));
+	})
+
 	socket.on('notice', function (Msg) {
 		var socketIndex = clients.map(function (e) { 
 			return e.id; 
@@ -252,7 +291,7 @@ app.post('/signin', function (req, res) {
 	console.log('Login attempt received...');
 	var User = {user: req.body.username, pw: req.body.password};
 	Database.login(User, function (success, id, dn) {
-		if (success === true) {
+		if (success) {
 			console.log('and was successful. User ' + id + ' (' +
 				User.user + ') logged in.');
 			res.cookie('_id', id, {maxAge: 900000, httpOnly: true});
@@ -262,7 +301,7 @@ app.post('/signin', function (req, res) {
 				{maxAge: 900000, httpOnly: false});
 			res.send({redirect: '/index.html'});
 		} else {
-			console.log('and failed');
+			console.log('and failed user/pw validation.');
 			res.send({redirect: '/signin.html?unsuccessful=true'})
 		}
 	});
@@ -274,14 +313,14 @@ app.post('/register', function (req, res) {
 		dn: req.body.dispName};
 	if (validateUser(User)) {
 		Database.register(User, function (success) {
-			if (success === true) {
+			if (success) {
 				console.log('successfully');
 				res.send({redirect: '/index.html'});
 			} else if (success === -1) {
-				console.log('username taken');
+				console.log('but username taken');
 				res.send({redirect: '/register.html?unsuccessful=user'});
 			} else if (success === -2) {
-				console.log('dn taken');
+				console.log('but dn taken');
 				res.send({redirect: '/register.html?unsuccessful=disp'});
 			} else {
 				console.log('Error occurred during registration attempt!');
@@ -289,7 +328,7 @@ app.post('/register', function (req, res) {
 			}
 		});
 	} else {
-		console.log('validation failed');
+		console.log('Registration validation failed');
 		res.send({redirect: '/register.html?unsuccessful=format'});
 	}
 });
