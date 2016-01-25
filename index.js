@@ -30,7 +30,7 @@ app.use(function (req, res, next) {
   	next();
 });
 
-var whitelist = [
+const whitelist = [
   'a',
   'b',
   'i',
@@ -39,7 +39,7 @@ var whitelist = [
   'strong'
 ];
 
-var options = {
+const options = {
 	key: fs.readFileSync('private-key.pem'),
 	cert: fs.readFileSync('public-cert.pem')
 };
@@ -47,7 +47,7 @@ var options = {
 const nodeServer = https.createServer(options, app);
 const io = SocketIO.listen(nodeServer);
 
-var bleachOptions = {
+const bleachOptions = {
   mode: 'white',
   list: whitelist
 };
@@ -84,6 +84,7 @@ function Client(socket, id) {
 		this.mobile = bool;
 	}
 }
+
 
 function GlobalMessage(msg, msgType, sender) {
 	this.msg = msg;
@@ -234,7 +235,7 @@ io.on('connection', function (socket) {
 	});
 
 	socket.on('channel message', function (Msg) {
-		const usersToSendTo = channels.get(Msg.channel); // Array<Client>
+		var usersToSendTo = channels.get(Msg.channel); // Array<Client>
 		socket.emit('incoming notice', new Notice('Not ready yet.', 'Err'));
 	})
 
