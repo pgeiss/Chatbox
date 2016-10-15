@@ -41,7 +41,8 @@ const whitelist = [
 
 const options = {
 	key: fs.readFileSync('private-key.pem'),
-	cert: fs.readFileSync('public-cert.pem')
+	cert: fs.readFileSync('root.crt'),
+	ca: [fs.readFileSync('1_Intermediate.crt'), fs.readFileSync('2_app.petergeiss.com.crt')]
 };
 
 const nodeServer = https.createServer(options, app);
