@@ -41,7 +41,7 @@ const whitelist = [
 ];
 
 const options = {
-	key: fs.readFileSync('private-key.pem'),
+	key: fs.readFileSync('private-key.key'),
 	cert: fs.readFileSync('root.crt'),
 	ca: [fs.readFileSync('1_Intermediate.crt'), fs.readFileSync('2_app.petergeiss.com.crt')]
 };

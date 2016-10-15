@@ -1,4 +1,4 @@
-var socket = io.connect('//app.petergeiss.com:39000');
+var socket = io.connect('https://app.petergeiss.com');
 //var socket = io.connect('//localhost:8443'); // DEBUG USE ONLY
 var cookieArray = document.cookie.split('; ');
 var displayName = '';
