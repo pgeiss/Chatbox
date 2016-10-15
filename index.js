@@ -9,6 +9,7 @@ const Database = require('./database.js');
 const bleach = require('bleach');
 const SocketIO = require('socket.io');
 const fs = require('fs');
+// Unfortunately, these must be global because of how callbacks work. At least it's only two globals.
 var clients = [];
 var channels = new Map(); // Map<String, Array<Client>>
 
@@ -25,7 +26,7 @@ app.use(bodyParser.json());
 
 app.use(function (req, res, next) {
 	if(!req.secure) {
-    	return res.redirect(['https://', req.get('Host'), req.url].join(''));
+    		return res.redirect(['https://', req.get('Host'), req.url].join(''));
   	}
   	next();
 });
@@ -54,6 +55,8 @@ const bleachOptions = {
 };
 
 // Constructors
+/* TODO: Maybe refactor this to use the new class keyword? It's technically not different and still prototypical,
+	but I like the idea of at least trying out new language features. */
 function Client(socket, id) {
 	this.socket = socket;
 	this.id = id;
@@ -348,8 +351,8 @@ http.createServer(function (req, res) {
     res.end();
 }).listen(httpPort);
 
-// To prevent malicious users from editing JS at the web page level 
-// to submit bad accounts.
+/* To prevent malicious users from editing JS at the web page level 
+	to submit bad accounts. */
 function validateUser(User) {
 	return typeof User === 'object' && typeof User.user === 'string' && 
 		typeof User.pw === 'string' && typeof User.dn === 'string' && 
